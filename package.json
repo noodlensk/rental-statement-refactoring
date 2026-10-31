@@ -1,0 +1,11 @@
+{
+  "name": "rental-statement-refactoring",
+  "private": true,
+  "scripts": {
+    "start": "node statement.js",
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
