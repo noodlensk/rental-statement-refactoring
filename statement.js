@@ -39,7 +39,9 @@ const PRICING = {
 };
 
 function amountFor(priceCode, days) {
-  if (!Object.hasOwn(PRICING, priceCode)) return 0;
+  if (!Object.hasOwn(PRICING, priceCode)) {
+    throw new Error(`Unknown price code: ${priceCode}`);
+  }
 
   const { basePrice, daysIncluded, pricePerExtraDay } = PRICING[priceCode];
   const extraDays = Math.max(0, days - daysIncluded);

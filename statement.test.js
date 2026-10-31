@@ -72,19 +72,15 @@ test("boundary days: no extra charge and no bonus point yet", () => {
   );
 });
 
-test("unknown price code costs nothing but still earns a point", () => {
+test("unknown price code is rejected", () => {
   const customer = { name: "lisa", rentals: [{ movieID: "X001", days: 5 }] };
   const moviesWithUnknownCode = {
     X001: { title: "Mystery", code: "documentary" },
   };
 
-  assert.strictEqual(
-    statement(customer, moviesWithUnknownCode),
-    "Rental Record for lisa\n" +
-      "\tMystery\t0\n" +
-      "Amount owed is 0\n" +
-      "You earned 1 frequent renter points\n",
-  );
+  assert.throws(() => statement(customer, moviesWithUnknownCode), {
+    message: "Unknown price code: documentary",
+  });
 });
 
 test("customer with no rentals", () => {
