@@ -16,17 +16,18 @@ function statement(customer, movies) {
   return result;
 }
 
+const PRICING = {
+  regular: { basePrice: 2, daysIncluded: 2, pricePerExtraDay: 1.5 },
+  new: { basePrice: 0, daysIncluded: 0, pricePerExtraDay: 3 },
+  childrens: { basePrice: 1.5, daysIncluded: 3, pricePerExtraDay: 1.5 },
+};
+
 function amountFor(priceCode, days) {
-  switch (priceCode) {
-    case "regular":
-      return days > 2 ? 2 + (days - 2) * 1.5 : 2;
-    case "new":
-      return days * 3;
-    case "childrens":
-      return days > 3 ? 1.5 + (days - 3) * 1.5 : 1.5;
-    default:
-      return 0;
-  }
+  if (!Object.hasOwn(PRICING, priceCode)) return 0;
+
+  const { basePrice, daysIncluded, pricePerExtraDay } = PRICING[priceCode];
+  const extraDays = Math.max(0, days - daysIncluded);
+  return basePrice + extraDays * pricePerExtraDay;
 }
 
 function pointsFor(priceCode, days) {
