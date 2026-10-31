@@ -83,6 +83,14 @@ test("unknown price code is rejected", () => {
   });
 });
 
+test("unknown movie is rejected", () => {
+  const customer = { name: "nils", rentals: [{ movieID: "X999", days: 1 }] };
+
+  assert.throws(() => statement(customer, movies), {
+    message: "Unknown movie: X999",
+  });
+});
+
 test("customer with no rentals", () => {
   const customer = { name: "olof", rentals: [] };
 

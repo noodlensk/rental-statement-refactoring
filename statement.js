@@ -4,6 +4,10 @@ function statement(customer, movies) {
 
 function statementData(customer, movies) {
   const lines = customer.rentals.map((rental) => {
+    if (!Object.hasOwn(movies, rental.movieID)) {
+      throw new Error(`Unknown movie: ${rental.movieID}`);
+    }
+
     const movie = movies[rental.movieID];
     return {
       title: movie.title,
