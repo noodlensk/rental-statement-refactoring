@@ -4,29 +4,8 @@ function statement(customer, movies) {
   let result = `Rental Record for ${customer.name}\n`;
   for (const rental of customer.rentals) {
     const movie = movies[rental.movieID];
-    let amount = 0;
-
-    switch (movie.code) {
-      case "regular":
-        amount = 2;
-        if (rental.days > 2) {
-          amount += (rental.days - 2) * 1.5;
-        }
-        break;
-      case "new":
-        amount = rental.days * 3;
-        break;
-      case "childrens":
-        amount = 1.5;
-        if (rental.days > 3) {
-          amount += (rental.days - 3) * 1.5;
-        }
-        break;
-    }
-
-    frequentRenterPoints++;
-    // add bonus for a two day new release rental
-    if (movie.code === "new" && rental.days > 2) frequentRenterPoints++;
+    const amount = amountFor(movie.code, rental.days);
+    frequentRenterPoints += pointsFor(movie.code, rental.days);
 
     result += `\t${movie.title}\t${amount}\n`;
     totalAmount += amount;
@@ -35,6 +14,24 @@ function statement(customer, movies) {
   result += `You earned ${frequentRenterPoints} frequent renter points\n`;
 
   return result;
+}
+
+function amountFor(priceCode, days) {
+  switch (priceCode) {
+    case "regular":
+      return days > 2 ? 2 + (days - 2) * 1.5 : 2;
+    case "new":
+      return days * 3;
+    case "childrens":
+      return days > 3 ? 1.5 + (days - 3) * 1.5 : 1.5;
+    default:
+      return 0;
+  }
+}
+
+function pointsFor(priceCode, days) {
+  // add bonus for a two day new release rental
+  return priceCode === "new" && days > 2 ? 2 : 1;
 }
 
 const customer = {
