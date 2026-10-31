@@ -1,19 +1,35 @@
 function statement(customer, movies) {
-  let totalAmount = 0;
-  let frequentRenterPoints = 0;
-  let result = `Rental Record for ${customer.name}\n`;
-  for (const rental of customer.rentals) {
+  return renderText(statementData(customer, movies));
+}
+
+function statementData(customer, movies) {
+  const lines = customer.rentals.map((rental) => {
     const movie = movies[rental.movieID];
-    const amount = amountFor(movie.code, rental.days);
-    frequentRenterPoints += pointsFor(movie.code, rental.days);
+    return {
+      title: movie.title,
+      amount: amountFor(movie.code, rental.days),
+      points: pointsFor(movie.code, rental.days),
+    };
+  });
 
-    result += `\t${movie.title}\t${amount}\n`;
-    totalAmount += amount;
-  }
-  result += `Amount owed is ${totalAmount}\n`;
-  result += `You earned ${frequentRenterPoints} frequent renter points\n`;
+  return {
+    customerName: customer.name,
+    lines,
+    totalAmount: lines.reduce((total, line) => total + line.amount, 0),
+    frequentRenterPoints: lines.reduce((total, line) => total + line.points, 0),
+  };
+}
 
-  return result;
+function renderText(data) {
+  const header = `Rental Record for ${data.customerName}\n`;
+  const body = data.lines
+    .map((line) => `\t${line.title}\t${line.amount}\n`)
+    .join("");
+  const footer =
+    `Amount owed is ${data.totalAmount}\n` +
+    `You earned ${data.frequentRenterPoints} frequent renter points\n`;
+
+  return header + body + footer;
 }
 
 const PRICING = {
